@@ -24,7 +24,7 @@ class NewGameSceneplayer1: SKScene {
     let tankhero = TankHero()
     let button = Button()
     
-    var bombList: List = List()
+    var bombList: BombList = BombList()
     
     
     override func didMoveToView(view: SKView) {
@@ -111,11 +111,12 @@ class NewGameSceneplayer1: SKScene {
                 button.attackLabel.runAction(SKAction.sequence([SKAction.scaleTo(0.8, duration: 0.1),SKAction.scaleTo(1, duration: 0.3)]))
                 
                 let bomb: Bomb = Bomb(_dir: tankhero.direction, _point: CGPointMake(Tank_X, Tank_Y))
-                let listnode: ListNode = ListNode(_bomb: bomb)
+                let listnode: ListNode<Bomb> = ListNode(_key: bomb)
                 
                 self.addChild(bomb.bomb)
                 
-                bombList.appendToTail(listnode)
+//                bombList.appendToTail(listnode)
+                bombList.bombList.appendToTail(listnode)
                 
             }
             
@@ -136,6 +137,13 @@ class NewGameSceneplayer1: SKScene {
     
     func initLabel(){
         button.SetButtonPosition(self.size.width/8 + 20, Y: self.size.height/2)
+        
+        UpBound.x = 0
+        UpBound.y = self.size.height
+        
+        DownBound.x = 0
+        DownBound.y = 0
+        
     }
     
     func initBackground(){
@@ -186,8 +194,24 @@ class NewGameSceneplayer1: SKScene {
         basicwall2.position = CGPointMake(size.width/4+100, i)
         basicwall2.setScale(24/27)
         self.addChild(basicwall2)
-
         
+//        var fightMap: FightMap = FightMap(_stage: 1, _scene: self)
+        
+//        fightMap.DrawFightMap()
+        
+        
+        tankhero.TankHeroUp.size.height = 60
+        tankhero.TankHeroUp.size.width = 60
+        
+        NSLog("width = %f height = %f", basicwall.size.width, basicwall.size.height)
+
+        NSLog("width = %f height = %f", basicwall2.size.width, basicwall2.size.height)
+        
+        NSLog("width = %f height = %f", tankhero.TankHeroUp.size.width, tankhero.TankHeroUp.size.height)
+        
+        NSLog("width = %f height = %f", self.size.width, self.size.height)
+        
+        NSLog("width = %f", RightBound.x - LeftBound.x)
     }
 }
 

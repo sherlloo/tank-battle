@@ -13,6 +13,8 @@ enum OBSTACLE{
     case BRICK, SLAB, GRASS, RIVER, BLANK
 };
 
+var Width: CGFloat = 60
+
 class Obstacle{
     
     var type = OBSTACLE.BLANK
@@ -31,7 +33,7 @@ class Obstacle{
         type = _type
         OBPoint = _point
         OBRect.origin = _point
-        OBRect.size = CGSizeMake(24, 24)
+        OBRect.size = CGSizeMake(60, 60)
         
         switch type{
         case OBSTACLE.BLANK:
@@ -51,7 +53,21 @@ class Obstacle{
         }
         
         obstacle = SKSpriteNode(texture: obstacleTexture)
+        obstacle.size = CGSizeMake(60, 60)
         obstacle.position = OBPoint
+        
+    }
+    
+}
+
+class ObstacleList{
+    var OBList = List<Obstacle>()
+    
+    init(){
+        
+    }
+    
+    func AttackDetection(){
         
     }
     

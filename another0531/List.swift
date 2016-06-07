@@ -10,36 +10,36 @@ import Foundation
 import SpriteKit
 
 
-class ListNode{
+class ListNode<T>{
     
-    var bomb: Bomb = Bomb()
+    var key: T?
     
-    var prev: ListNode?
-    var next: ListNode?
+    var prev: ListNode<T>?
+    var next: ListNode<T>?
     
     init(){
         self.prev = nil
         self.next = nil
     }
     
-    init(_bomb: Bomb){
-        self.bomb = _bomb
+    init(_key: T){
+        self.key = _key
         self.prev = nil
         self.next = nil
     }
     
 };
 
-class List{
-    var head: ListNode?
-    var tail: ListNode?
+class List< T>{
+    var head : ListNode<T>?
+    var tail : ListNode<T>?
     
     init(){
         self.head = nil
         self.tail = nil
     }
     
-    func appendToTail(node: ListNode){
+    func appendToTail(node: ListNode<T>){
         if tail == nil{
             tail = node
             head = tail
@@ -52,7 +52,7 @@ class List{
         }
     }
     
-    func appendToHead(node: ListNode){
+    func appendToHead(node: ListNode<T>){
         if head == nil{
             head = node
             tail = head
@@ -66,10 +66,9 @@ class List{
     }
     
     /*没有释放子弹所申请的资源*/
-    func remove(node: ListNode){
+    func remove(node: ListNode<T>){
         
         /*should delete the bomb, not hiden*/
-        node.bomb.bomb.hidden = true
         
         if node.prev == nil && node.next == nil{
             head = nil
@@ -88,7 +87,7 @@ class List{
             node.next?.prev = node.prev
         }
     }
-    
+/*
     func BombListMove(){
         
         var bombHead: ListNode? = head
@@ -111,5 +110,6 @@ class List{
         }
         
     }
+*/
 }
 

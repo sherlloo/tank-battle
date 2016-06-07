@@ -11,6 +11,8 @@ import SpriteKit
 
 var LeftBound: CGPoint  = CGPointMake(0, 0)
 var RightBound: CGPoint = CGPointMake(0, 0)
+var UpBound: CGPoint = CGPointMake(0, 0)
+var DownBound: CGPoint = CGPointMake(0, 0)
 
 class Button {
     

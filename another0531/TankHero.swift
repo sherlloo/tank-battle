@@ -40,22 +40,26 @@ class TankHero {
         direction = Direction.UP
         
         TankHeroUp = SKSpriteNode(texture:TankHeroUpTexture)
-        TankHeroUp.setScale(1.5)
+//        TankHeroUp.setScale(1.5)
+        TankHeroUp.size = CGSizeMake(60, 60)
         TankHeroUp.name = "TankHeroUp"
         TankHeroUp.hidden = false
         
         TankHeroDown = SKSpriteNode(texture:TankHeroDownTexture)
-        TankHeroDown.setScale(1.5)
+//        TankHeroDown.setScale(1.5)
+        TankHeroDown.size = CGSizeMake(60, 60)
         TankHeroDown.name = "TankHeroDown"
         TankHeroDown.hidden = true
         
         TankHeroLeft = SKSpriteNode(texture:TankHeroLeftTexture)
-        TankHeroLeft.setScale(1.5)
+//        TankHeroLeft.setScale(1.5)
+        TankHeroLeft.size = CGSizeMake(60, 60)
         TankHeroLeft.name = "TankHeroLeft"
         TankHeroLeft.hidden = true
         
         TankHeroRight = SKSpriteNode(texture:TankHeroRightTexture)
-        TankHeroRight.setScale(1.5)
+//        TankHeroRight.setScale(1.5)
+        TankHeroRight.size = CGSizeMake(60, 60)
         TankHeroRight.name = "TankHeroRight"
         TankHeroRight.hidden = true
     }
