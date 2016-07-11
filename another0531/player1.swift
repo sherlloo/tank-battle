@@ -23,6 +23,7 @@ class NewGameSceneplayer1: SKScene {
     
     let tankhero = TankHero()
     let button = Button()
+    let map = FightMap()
     
     var bombList: BombList = BombList()
     
@@ -30,14 +31,14 @@ class NewGameSceneplayer1: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         
-        Tank_X = size.width * 0.5
-        Tank_Y = size.height * 0.6
+        Tank_X = size.width / 4+30
+        Tank_Y = size.height * 0+60
         
         initLabel()
         initBackground()
         initTank()
+        map.DrawFightMap()
         DrawMap()
-        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -54,9 +55,9 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if(Tank_Y <= size.height - 43)
+                    if((Tank_Y <= size.height - 43)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
                     {
-                        Tank_Y += 20
+                        Tank_Y += 30
                     }
                     
                 }
@@ -70,9 +71,9 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if(Tank_Y >= 40)
+                    if((Tank_Y >= 40)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
                     {
-                        Tank_Y -= 20
+                        Tank_Y -= 30
                     }
                 }
             }
@@ -85,9 +86,9 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if(Tank_X >= (size.width/4 + 40))
+                    if((Tank_X >= (size.width/4 + 40))&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
                     {
-                        Tank_X -= 20
+                        Tank_X -= 30
                     }
                 }
             }
@@ -101,9 +102,9 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if(Tank_X <= size.width/8*6.5 - 40)
+                    if((Tank_X <= size.width/8*6.5 - 10)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
                     {
-                        Tank_X += 20
+                        Tank_X += 30
                     }
                 }
             }
@@ -158,8 +159,8 @@ class NewGameSceneplayer1: SKScene {
         self.addChild(button.rightLabel)
         self.addChild(button.attackLabel)
         
-        self.addChild(button.FightViewl)
-        self.addChild(button.FightViewr)
+       self.addChild(button.FightViewl)
+       self.addChild(button.FightViewr)
         
     }
     
@@ -177,255 +178,63 @@ class NewGameSceneplayer1: SKScene {
     
     func DrawMap()
     {
-        var i:CGFloat = 20.0;
-        i = size.height/2
-//        for(;i <= size.height - 20; i=i+30)
-//        {
-            let BasicWallTexture = SKTexture(imageNamed: "Brick")
-            let basicwall = SKSpriteNode(texture:BasicWallTexture)
-            basicwall.position = CGPointMake(size.width/4+30, i)
-            basicwall.setScale(1)
-            self.addChild(basicwall)
-//        }
-        
-        
-        let BasicWallTexture2 = SKTexture(imageNamed: "Slab")
-        let basicwall2 = SKSpriteNode(texture:BasicWallTexture2)
-        basicwall2.position = CGPointMake(size.width/4+100, i)
-        basicwall2.setScale(24/27)
-        self.addChild(basicwall2)
-        
-//        var fightMap: FightMap = FightMap(_stage: 1, _scene: self)
-        
-//        fightMap.DrawFightMap()
-        
-        
-        tankhero.TankHeroUp.size.height = 60
-        tankhero.TankHeroUp.size.width = 60
-        
-        NSLog("width = %f height = %f", basicwall.size.width, basicwall.size.height)
+        let BasicWallTexture = SKTexture(imageNamed: "Brick")
+        let SlabWallTexture = SKTexture(imageNamed: "Slab")
+        let RiverWallTexture = SKTexture(imageNamed: "River")
+        let GrassWallTexture = SKTexture(imageNamed: "Grass")
+        let BossTexture = SKTexture(imageNamed: "Boss")
+        for var i=0;i<12;i++
+        {
+            for var j=0;j<13;j++
+            {
+                if(map.map[i][j] == 1)
+                {
+                    let basicwall = SKSpriteNode(texture:BasicWallTexture)
+                    let recordheight:CGFloat = CGFloat(60*i)
+                    let recordwidth:CGFloat = CGFloat(60*j)
+                    basicwall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
+                    basicwall.size=CGSizeMake(60, 60)
+                    self.addChild(basicwall)
+                }
+                else if(map.map[i][j] == 2)
+                {
+                    let slabwall = SKSpriteNode(texture:SlabWallTexture)
+                    let recordheight:CGFloat = CGFloat(60*i)
+                    let recordwidth:CGFloat = CGFloat(60*j)
+                    slabwall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
+                    slabwall.size=CGSizeMake(60, 60)
+                    self.addChild(slabwall)
 
-        NSLog("width = %f height = %f", basicwall2.size.width, basicwall2.size.height)
-        
-        NSLog("width = %f height = %f", tankhero.TankHeroUp.size.width, tankhero.TankHeroUp.size.height)
-        
-        NSLog("width = %f height = %f", self.size.width, self.size.height)
-        
-        NSLog("width = %f", RightBound.x - LeftBound.x)
-    }
-}
-
-
-
-
-
-
-
-
-
-/*
-//
-//  player1.swift
-//  another0531
-//
-//  Created by Apple on 16/5/31.
-//  Copyright © 2016年 Apple. All rights reserved.
-//
-
-//import Foundation
-
-import SpriteKit
-
-
-enum Direction{
-    case UP
-    case DOWN
-    case LEFT
-    case RIGHT
-};
-
-class NewGameSceneplayer1: SKScene {
-    
-    let upLabel    = SKLabelNode(text: "Chalkduster")
-    let downLabel  = SKLabelNode(text: "Chalkduster")
-    let leftLabel  = SKLabelNode(text: "Chalkduster")
-    let rightLabel = SKLabelNode(text: "Chalkduster")
-    
-    
-    let attackLabel = SKLabelNode(text: "Chalkduster")
-    
-    var direction = Direction.DOWN
-
-/*
-    let DirectionViewTexture = SKTexture(imageNamed: "DirectionBackGround")
-    var DirectionView = SKSpriteNode()
- */
-    var Tank_X: CGFloat = 0.0;
-    var Tank_Y: CGFloat = 0.0;
-    
-    let FightViewTexture = SKTexture(imageNamed: "BackGround")
-    var FightView = SKSpriteNode()
-    
-    let TankHeroTexture = SKTexture(imageNamed: "Tank")
-    var TankHero = SKSpriteNode()
-    
-    
-    override func didMoveToView(view: SKView) {
-        /* Setup your scene here */
-        
-        Tank_X = size.width * 0.5
-        Tank_Y = size.height * 0.6
-        
-        initLabel()
-        initBackground()
-        initTank()
-        
-    }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        /* Called when a touch begins */
-        
-        /* for touch in touches {
-        let location = touch.locationInNode(self)
-        
-        let sprite = SKSpriteNode(imageNamed:"Spaceship")
-        
-        sprite.xScale = 0.5
-        sprite.yScale = 0.5
-        sprite.position = location
-        
-        let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-        
-        sprite.runAction(SKAction.repeatActionForever(action))
-        
-        self.addChild(sprite)
-        }*/
-        
-        for touch in touches {
-            let location = touch.locationInNode(self)
-            if(CGRectContainsPoint(upLabel.frame, location)){
-                
-                    Tank_Y += 20
+                }
+                else if(map.map[i][j] == 3)
+                {
+                    let riverwall = SKSpriteNode(texture:RiverWallTexture)
+                    let recordheight:CGFloat = CGFloat(60*i)
+                    let recordwidth:CGFloat = CGFloat(60*j)
+                    riverwall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
+                    riverwall.size=CGSizeMake(60, 60)
+                    self.addChild(riverwall)
+                }
+                else if(map.map[i][j]==4)
+                {
+                    let grasswall = SKSpriteNode(texture:GrassWallTexture)
+                    let recordheight:CGFloat = CGFloat(60*i)
+                    let recordwidth:CGFloat = CGFloat(60*j)
+                    grasswall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
+                    grasswall.size=CGSizeMake(60, 60)
+                    self.addChild(grasswall)
+                }
+                else if(map.map[i][j] == 5)
+                {
+                    let boss = SKSpriteNode(texture:BossTexture)
+                    let recordheight:CGFloat = CGFloat(60*i)
+                    let recordwidth:CGFloat = CGFloat(60*j)
+                    boss.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
+                    boss.size=CGSizeMake(60, 60)
+                    self.addChild(boss)
+                }
             }
-            else if(CGRectContainsPoint(downLabel.frame, location)){
-                
-                Tank_Y -= 20
-            }
-            else if(CGRectContainsPoint(attackLabel.frame, location)){
-                
-            }
-
         }
-        
-        
     }
-    
-    override func update(currentTime: CFTimeInterval) {
-        /* Called before each frame is rendered */
-        let location = CGPoint(x: Tank_X, y: Tank_Y)
-        TankHero.runAction(SKAction.moveTo(location, duration: 0.1))
-    }
-    
-    
-  /*  func tapped(button:UIButton){
-       print(button.titleForState(.Normal))
- }*/
-    
-    
-    func initLabel(){
-        upLabel.name = "Up"
-        upLabel.text = "U";
-        upLabel.fontSize = 80
-        upLabel.fontColor = SKColor.orangeColor()
-        upLabel.position = CGPointMake(self.size.width/8 + 20, self.size.height/2)
-        
-        downLabel.name = "Down"
-        downLabel.text = "D";
-        downLabel.fontSize = 80
-        downLabel.fontColor = SKColor.orangeColor()
-        downLabel.position = CGPointMake(self.size.width/8 + 20, upLabel.position.y - 90)
-
-        leftLabel.name = "Left"
-        leftLabel.text = "L";
-        leftLabel.fontSize = 80
-        leftLabel.fontColor = SKColor.orangeColor()
-        leftLabel.position = CGPointMake(self.size.width/8 - 70, upLabel.position.y - 90)
-
-        rightLabel.name = "Right"
-        rightLabel.text = "R";
-        rightLabel.fontSize = 80
-        rightLabel.fontColor = SKColor.orangeColor()
-        rightLabel.position = CGPointMake(self.size.width/8 + 110, upLabel.position.y - 90)
-        
-        attackLabel.name = "Attack"
-        attackLabel.text = "A";
-        attackLabel.fontSize = 120;
-        attackLabel.fontColor = SKColor.orangeColor()
-        attackLabel.position = CGPointMake(self.size.width/8*7, self.size.height/2 - 90)
-
-        FightView = SKSpriteNode(texture: FightViewTexture)
-        FightView.position = CGPointMake(self.size.width/2 , self.size.height * 0.6)
-        
-//        DirectionView = SKSpriteNode(texture: DirectionViewTexture)
-//       DirectionView.position = CGPoint(x: 0, y: 0)
-//        DirectionView.setScale(2.2)
-        
-    }
-    
-    func initBackground(){
-        /*横屏*/
-        UIDevice.currentDevice().setValue(UIInterfaceOrientation.LandscapeLeft.rawValue, forKey: "orientation")
-        
-        backgroundColor = UIColor.blackColor()
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 45;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-        
-//        self.addChild(myLabel)
-        
-//        self.addChild(DirectionView)
-        
-        self.addChild(upLabel)
-        self.addChild(downLabel)
-        self.addChild(leftLabel)
-        self.addChild(rightLabel)
-        
-        self.addChild(attackLabel)
-        
-//        self.addChild(DirectionView)
-        
-//        self.addChild(FightView)
-        
-/*
-        let fightView = UIView(frame: CGRect(x: self.size.width/8, y: 0, width: self.size.width/4, height: self.size.height))
-        fightView.backgroundColor = UIColor.grayColor()
-        
-        self.view?.addSubview(fightView)
-*/
-        
-        
-        
-    }
-    
-    
-    func initTank(){
-       
-        TankHero = SKSpriteNode(texture:TankHeroTexture)
-        
-        TankHero.position = CGPointMake(Tank_X, Tank_Y)
-        TankHero.setScale(1.5)
-        TankHero.name = "TankHero"
-        self.addChild(TankHero)
-        
-//        self.addChild(FightView)
-        
-                
-        NSLog("Tank_width = %f Tank_height = %f", TankHero.size.width, TankHero.size.height)
-        
-        
-    }
-    
 }
 
-*/

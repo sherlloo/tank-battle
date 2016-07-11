@@ -22,8 +22,6 @@ class GameScene: SKScene {
         background.name="background"
         self.addChild(background)
         
-        
-       // let myplayer1 = SKLabelNode(text: "Chalkduster")
         myplayer1.name = "MyPlayer1"
         myplayer1.text = "Player1"
         myplayer1.fontName = "MarkerFelt-Thin"
@@ -32,8 +30,6 @@ class GameScene: SKScene {
         myplayer1.position = CGPointMake(self.size.width/2, self.size.height/3)
         self.addChild(myplayer1)
         
-        
-    //    let myplayer2 = SKLabelNode(text: "Chalkduster")
         myplayer2.name = "MyPlayer2"
         myplayer2.text = "Player2"
         myplayer2.fontName = "MarkerFelt-Thin"
@@ -41,25 +37,6 @@ class GameScene: SKScene {
         myplayer2.fontColor = SKColor.orangeColor()
         myplayer2.position = CGPointMake(self.size.width/2, self.size.height/4)
         self.addChild(myplayer2)
-
-//        let myplayer2:UIButton = UIButton(type:.Custom)
-//        myplayer2.frame = CGRectMake(150,450,100,30)
-//        myplayer2.setTitle("Player2",forState:UIControlState.Normal)
-//        myplayer2.setTitleColor(UIColor.orangeColor(), forState: .Normal)
-       // self.view?.addSubview(myplayer2)
-     
-      //  myplayer1.addTarget(self,action:Selector("tapped:"),forControlEvents:UIControlEvents.TouchUpInside)
-     
-       // myplayer2.addTarget(self,action:Selector("tapped:"),forControlEvents:UIControlEvents.TouchUpInside)
-        
-        
-        
-     /*   let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 45;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-        
-        self.addChild(myLabel)*/
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -81,7 +58,7 @@ class GameScene: SKScene {
             
             skView1.presentScene(nextScene)
 
-            }
+          }
             else if(CGRectContainsPoint(myplayer2.frame,location ))
           {
             let nextScene=NewGameSceneplayer2(size:CGSizeMake(1334, 750))

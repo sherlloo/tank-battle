@@ -40,25 +40,21 @@ class TankHero {
         direction = Direction.UP
         
         TankHeroUp = SKSpriteNode(texture:TankHeroUpTexture)
-//        TankHeroUp.setScale(1.5)
         TankHeroUp.size = CGSizeMake(60, 60)
         TankHeroUp.name = "TankHeroUp"
         TankHeroUp.hidden = false
         
         TankHeroDown = SKSpriteNode(texture:TankHeroDownTexture)
-//        TankHeroDown.setScale(1.5)
         TankHeroDown.size = CGSizeMake(60, 60)
         TankHeroDown.name = "TankHeroDown"
         TankHeroDown.hidden = true
         
         TankHeroLeft = SKSpriteNode(texture:TankHeroLeftTexture)
-//        TankHeroLeft.setScale(1.5)
         TankHeroLeft.size = CGSizeMake(60, 60)
         TankHeroLeft.name = "TankHeroLeft"
         TankHeroLeft.hidden = true
         
         TankHeroRight = SKSpriteNode(texture:TankHeroRightTexture)
-//        TankHeroRight.setScale(1.5)
         TankHeroRight.size = CGSizeMake(60, 60)
         TankHeroRight.name = "TankHeroRight"
         TankHeroRight.hidden = true
@@ -127,4 +123,132 @@ class TankHero {
         
     }
     
+    func JudgeTankandWall(Tank_X: CGFloat, Tank_Y: CGFloat, a:[[Int]], dire:Direction)->Bool
+    {
+        let judge_X = Int(Tank_Y/60)
+        let judge_Y = Int(Tank_X/60)
+        if(dire == Direction.UP)
+        {
+            if(Int(Tank_Y)%60==0)
+            {
+                return true
+            }
+            else
+            {
+             if(judge_X+1>=12)
+             {
+                return false
+             }
+              if(a[judge_X+1][judge_Y] != 0)
+              {
+                  return false
+              }
+              else
+              {
+                  if(Int(Tank_X)%60 == 0)
+                  {
+                    if(a[judge_X+1][judge_Y-1] != 0)
+                    {
+                        return false
+                    }
+                    return true
+                  }
+                  return true
+                }
+            }
+
+        }
+        else if(dire == Direction.DOWN)
+        {
+            if(Int(Tank_Y)%60==0)
+            {
+                return true
+            }
+            else
+            {
+                if(a[judge_X-1][judge_Y] != 0)
+                {
+                    return false
+                }
+                else
+                {
+                    if(Int(Tank_X)%60 == 0)
+                    {
+                        if(a[judge_X-1][judge_Y-1] != 0)
+                        {
+                           return false
+                        }
+                        return true
+                    }
+                    return true
+                }
+            }
+        }
+        else if(dire == Direction.RIGHT)
+        {
+            if(Int(Tank_X)%60==0)
+            {
+                return true
+            }
+            else
+            {
+                if(judge_Y+1>=13)
+                {
+                    return false
+                }
+                else
+                {
+                    if(a[judge_X][judge_Y+1] != 0)
+                    {
+                        return false
+                    }
+                    else
+                    {
+                        if(Int(Tank_Y)%60 == 0)
+                        {
+                           if(a[judge_X-1][judge_Y+1] != 0)
+                           {
+                             return false
+                            }
+                            return true
+                        }
+                        return true
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(Int(Tank_X)%60==0)
+            {
+                return true
+            }
+            else
+            {
+                if(judge_Y-1<0)
+                {
+                    return false
+                }
+                else
+                {
+                    if(a[judge_X][judge_Y-1] != 0)
+                    {
+                        return false
+                    }
+                    else
+                    {
+                        if(Int(Tank_Y)%60 == 0)
+                        {
+                            if(a[judge_X-1][judge_Y-1] != 0)
+                            {
+                                return false
+                            }
+                            return true
+                        }
+                        return true
+                    }
+                }
+            }
+        }
+    }
 }

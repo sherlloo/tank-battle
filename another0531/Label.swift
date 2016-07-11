@@ -83,7 +83,7 @@ class Button {
         FightViewl.position = CGPointMake((X - 20)*2, Y)
         
         RightBound = CGPointMake((X - 20)*6.5 + 80, Y)
-        FightViewr.position = CGPointMake((X - 20)*6.5, Y)
+        FightViewr.position = CGPointMake((X - 20)*6.5+30, Y)
         
         
     }
