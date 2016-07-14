@@ -15,6 +15,11 @@ enum Direction{
     case UP, DOWN, LEFT, RIGHT
 };
 
+var WinOrNot = 3//3 means still running, 2 means Win and 1 means failed beacause tankhero is killed, and 0 means boss is killed!
+var hit = 0
+var pointx = 0
+var pointy = 0
+var grade = 0
 
 class NewGameSceneplayer1: SKScene {
     
@@ -23,26 +28,35 @@ class NewGameSceneplayer1: SKScene {
     
     let tankhero = TankHero()
     let button = Button()
-    let map = FightMap()
-    
-    var bombList: BombList = BombList()
-    
+    var map = FightMap()
+    var enemies = Tankenemies()
+    var timeSinceLast:CFTimeInterval = 0.0
+    var timeSinceLast1:CFTimeInterval = 0.0
+
+    var lastUpdateTimeInterval:CFTimeInterval = 0.0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         
-        Tank_X = size.width / 4+30
-        Tank_Y = size.height * 0+60
+        Tank_X = size.width / 4+30*10
+        Tank_Y = size.height * 0+30
+        
+        map.DrawFightMap()
+        DrawMap()
+        
+        enemies.SetEnemiesPosition(size.width / 4+30, b:size.height - 30,c: size.width/4, d:size.height)
         
         initLabel()
         initBackground()
         initTank()
-        map.DrawFightMap()
-        DrawMap()
+        initenemies()
+        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         /* Called when a touch begins */
+        
+        
         
         for touch in touches {
             let location = touch.locationInNode(self)
@@ -55,8 +69,14 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if((Tank_Y <= size.height - 43)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
+                    if((Tank_Y <= size.height - 43)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map1, dire: tankhero.direction)))
                     {
+                        let judge_X = Int(Tank_Y/30)
+                        let judge_Y = Int((Tank_X - size.width/4)/30)
+                        map.map1[(judge_X-1)*26+judge_Y].state = 0
+                        map.map1[(judge_X-1)*26+judge_Y-1].state = 0
+                        map.map1[(judge_X+1)*26+judge_Y].state = 9
+                        map.map1[(judge_X+1)*26+judge_Y-1].state = 9
                         Tank_Y += 30
                     }
                     
@@ -71,8 +91,14 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if((Tank_Y >= 40)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
+                    if((Tank_Y >= 40)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map1, dire: tankhero.direction)))
                     {
+                        let judge_X = Int(Tank_Y/30)
+                        let judge_Y = Int((Tank_X - size.width/4)/30)
+                        map.map1[(judge_X)*26+judge_Y].state = 0
+                        map.map1[(judge_X)*26+judge_Y-1].state = 0
+                        map.map1[(judge_X-2)*26+judge_Y].state = 9
+                        map.map1[(judge_X-2)*26+judge_Y-1].state = 9
                         Tank_Y -= 30
                     }
                 }
@@ -86,8 +112,14 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if((Tank_X >= (size.width/4 + 40))&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
+                    if((Tank_X >= (size.width/4 + 40))&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map1, dire: tankhero.direction)))
                     {
+                        let judge_X = Int(Tank_Y/30)
+                        let judge_Y = Int((Tank_X - size.width/4)/30)
+                        map.map1[(judge_X)*26+judge_Y].state = 0
+                        map.map1[(judge_X-1)*26+judge_Y].state = 0
+                        map.map1[(judge_X)*26+judge_Y-2].state = 9
+                        map.map1[(judge_X-1)*26+judge_Y-2].state = 9
                         Tank_X -= 30
                     }
                 }
@@ -102,8 +134,14 @@ class NewGameSceneplayer1: SKScene {
                 }
                 else
                 {
-                    if((Tank_X <= size.width/8*6.5 - 10)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map, dire: tankhero.direction)))
+                    if((Tank_X <= size.width/8*6.5 - 10)&&(tankhero.JudgeTankandWall(Tank_X - size.width / 4, Tank_Y: Tank_Y, a: map.map1, dire: tankhero.direction)))
                     {
+                        let judge_X = Int(Tank_Y/30)
+                        let judge_Y = Int((Tank_X - size.width/4)/30)
+                        map.map1[(judge_X)*26+judge_Y-1].state = 0
+                        map.map1[(judge_X-1)*26+judge_Y-1].state = 0
+                        map.map1[(judge_X-1)*26+judge_Y+1].state = 9
+                        map.map1[(judge_X)*26+judge_Y+1].state = 9
                         Tank_X += 30
                     }
                 }
@@ -117,7 +155,7 @@ class NewGameSceneplayer1: SKScene {
                 self.addChild(bomb.bomb)
                 
 //                bombList.appendToTail(listnode)
-                bombList.bombList.appendToTail(listnode)
+                tankhero.bombList.bombList.appendToTail(listnode)
                 
             }
             
@@ -125,18 +163,170 @@ class NewGameSceneplayer1: SKScene {
         
     }
     
+    func restart()
+    {
+        
+        Tank_X = size.width / 4+30*10
+        Tank_Y = size.height * 0+30
+        
+        map.DrawFightMap()
+        DrawMap()
+        
+        enemies.SetEnemiesPosition(size.width / 4+30, b:size.height - 30,c: size.width/4, d:size.height)
+        
+        initLabel()
+        initBackground()
+        initTank()
+        initenemies()
+    }
+    
+    func ShowWinnerWidow()
+    {
+        let label = SKLabelNode(fontNamed:"MarkerFelt-Thin")
+        label.text = "You win!"
+        label.zPosition = 2
+        label.fontColor = SKColor.orangeColor()
+        label.setScale(5)
+        label.position = CGPointMake(self.size.width/2+50, self.size.height/2 + 20)
+        self.addChild(label)
+    }
+    
+    func ShowFailedWindow()
+    {
+        let label = SKLabelNode(fontNamed:"MarkerFelt-Thin")
+        label.text = "GameOver!"
+        label.zPosition = 2
+        label.fontColor = SKColor.orangeColor()
+        label.setScale(5)
+        label.position = CGPointMake(self.size.width/2+50, self.size.height/2 + 20)
+        self.addChild(label)
+    }
+    
+    func JudgeWinOrNot()
+    {
+        if(WinOrNot == 2)
+        {
+            ShowWinnerWidow()
+        }
+        else if(WinOrNot == 1)
+        {
+             ShowFailedWindow()
+        }
+        else if(WinOrNot == 0)
+        {
+            map.map1[12].Wall.hidden = true
+            let BossTexture = SKTexture(imageNamed: "FailedBoss")
+            map.map1[12].state = 0
+            map.map1[12].Wall = SKSpriteNode(texture:BossTexture)
+            map.map1[12].Wall.position = CGPointMake((size.width/4 + 390.0),(30.0))
+            map.map1[12].Wall.size = CGSizeMake(60, 60)
+            self.addChild(map.map1[12].Wall)
+            ShowFailedWindow()
+        }
+        if(hit == 1)
+        {
+            var judge_X = Int(enemies.enemy1.Tank_Y/30)
+            var judge_Y = Int((enemies.enemy1.Tank_X - size.width/4)/30)
+            if(judge_X == pointx && judge_Y == pointy)
+            {
+                enemies.enemy1.TankEnemyDown.hidden = true
+                enemies.enemy1.TankEnemyLeft.hidden = true
+                enemies.enemy1.TankEnemyRight.hidden = true
+                enemies.enemy1.TankEnemyUp.hidden = true
+                map.map1[judge_X*26+judge_Y].state = 0
+                map.map1[(judge_X-1)*26+judge_Y].state = 0
+                map.map1[judge_X*26+judge_Y-1].state = 0
+                map.map1[(judge_X-1)*26+judge_Y-1].state = 0
+                enemies.enemy1.status = 0
+            }
+            else {
+                judge_X = Int(enemies.enemy2.Tank_Y/30)
+                judge_Y = Int((enemies.enemy2.Tank_X - size.width/4)/30)
+                if(judge_X == pointx && judge_Y == pointy)
+                {
+                    enemies.enemy2.TankEnemyDown.hidden = true
+                    enemies.enemy2.TankEnemyLeft.hidden = true
+                    enemies.enemy2.TankEnemyRight.hidden = true
+                    enemies.enemy2.TankEnemyUp.hidden = true
+                    map.map1[judge_X*26+judge_Y].state = 0
+                    map.map1[(judge_X-1)*26+judge_Y].state = 0
+                    map.map1[judge_X*26+judge_Y-1].state = 0
+                    map.map1[(judge_X-1)*26+judge_Y-1].state = 0
+                    enemies.enemy2.status = 0
+                }
+                else
+                {
+                    judge_X = Int(enemies.enemy3.Tank_Y/30)
+                    judge_Y = Int((enemies.enemy3.Tank_X - size.width/4)/30)
+                    if(judge_X == pointx && judge_Y == pointy)
+                    {
+                        enemies.enemy3.TankEnemyDown.hidden = true
+                        enemies.enemy3.TankEnemyLeft.hidden = true
+                        enemies.enemy3.TankEnemyRight.hidden = true
+                        enemies.enemy3.TankEnemyUp.hidden = true
+                        map.map1[judge_X*26+judge_Y].state = 0
+                        map.map1[(judge_X-1)*26+judge_Y].state = 0
+                        map.map1[judge_X*26+judge_Y-1].state = 0
+                        map.map1[(judge_X-1)*26+judge_Y-1].state = 0
+                       // enemies.enemy3.setTankPosition(size.width / 4+30, b:size.height - 30,c: size.width/4, d:size.height)
+                        enemies.enemy3.status = 0
+                    }
+                        else
+                    {
+                        judge_X = Int(enemies.enemy4.Tank_Y/30)
+                        judge_Y = Int((enemies.enemy4.Tank_X - size.width/4)/30)
+                        if(judge_X == pointx && judge_Y == pointy)
+                        {
+                            enemies.enemy4.TankEnemyDown.hidden = true
+                            enemies.enemy4.TankEnemyLeft.hidden = true
+                            enemies.enemy4.TankEnemyRight.hidden = true
+                            enemies.enemy4.TankEnemyUp.hidden = true
+                            map.map1[judge_X*26+judge_Y].state = 0
+                            map.map1[(judge_X-1)*26+judge_Y].state = 0
+                            map.map1[judge_X*26+judge_Y-1].state = 0
+                            map.map1[(judge_X-1)*26+judge_Y-1].state = 0
+                            enemies.enemy4.status = 0
+                        }
+                    }
+                }
+            }
+            hit = 0
+            enemies.count--
+            grade++
+        }
+        if(grade >= 4)
+        {
+            WinOrNot = 2
+        }
+    }
+
+
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        
+        
+        timeSinceLast = currentTime - lastUpdateTimeInterval + timeSinceLast
+        timeSinceLast1 = currentTime - lastUpdateTimeInterval + timeSinceLast1
+        lastUpdateTimeInterval = currentTime
+        
         let location = CGPoint(x: Tank_X, y: Tank_Y)
         tankhero.TankMove(location)
         
         /*update the bomb position*/
-        bombList.BombListMove()
+        tankhero.bombList.BombListMove(map.map1,b: size.width/4)
+        if(timeSinceLast > 0.5)
+        {
+            timeSinceLast = 1.0/60.0
+            lastUpdateTimeInterval = currentTime
+
+            enemies.EnemiesMove(map.map1)
+        }
+                JudgeWinOrNot()
         
     }
     
-    
     func initLabel(){
+        
         button.SetButtonPosition(self.size.width/8 + 20, Y: self.size.height/2)
         
         UpBound.x = 0
@@ -144,7 +334,6 @@ class NewGameSceneplayer1: SKScene {
         
         DownBound.x = 0
         DownBound.y = 0
-        
     }
     
     func initBackground(){
@@ -158,6 +347,8 @@ class NewGameSceneplayer1: SKScene {
         self.addChild(button.leftLabel)
         self.addChild(button.rightLabel)
         self.addChild(button.attackLabel)
+        self.addChild(button.RestartLabel)
+        button.RestartLabel.hidden = true
         
        self.addChild(button.FightViewl)
        self.addChild(button.FightViewr)
@@ -176,6 +367,29 @@ class NewGameSceneplayer1: SKScene {
         
     }
     
+    func initenemies()
+    {
+        self.addChild(enemies.enemy1.TankEnemyDown)
+        self.addChild(enemies.enemy1.TankEnemyUp)
+        self.addChild(enemies.enemy1.TankEnemyLeft)
+        self.addChild(enemies.enemy1.TankEnemyRight)
+        
+        self.addChild(enemies.enemy2.TankEnemyDown)
+        self.addChild(enemies.enemy2.TankEnemyUp)
+        self.addChild(enemies.enemy2.TankEnemyLeft)
+        self.addChild(enemies.enemy2.TankEnemyRight)
+        
+        self.addChild(enemies.enemy3.TankEnemyDown)
+        self.addChild(enemies.enemy3.TankEnemyUp)
+        self.addChild(enemies.enemy3.TankEnemyLeft)
+        self.addChild(enemies.enemy3.TankEnemyRight)
+        
+        self.addChild(enemies.enemy4.TankEnemyDown)
+        self.addChild(enemies.enemy4.TankEnemyUp)
+        self.addChild(enemies.enemy4.TankEnemyLeft)
+        self.addChild(enemies.enemy4.TankEnemyRight)
+    }
+    
     func DrawMap()
     {
         let BasicWallTexture = SKTexture(imageNamed: "Brick")
@@ -183,55 +397,55 @@ class NewGameSceneplayer1: SKScene {
         let RiverWallTexture = SKTexture(imageNamed: "River")
         let GrassWallTexture = SKTexture(imageNamed: "Grass")
         let BossTexture = SKTexture(imageNamed: "Boss")
-        for var i=0;i<12;i++
+        
+        for var i=0;i<25;i++
         {
-            for var j=0;j<13;j++
+            for var j=0;j<26;j++
             {
-                if(map.map[i][j] == 1)
+                if(map.map1[i*26+j].state == 1)
                 {
-                    let basicwall = SKSpriteNode(texture:BasicWallTexture)
-                    let recordheight:CGFloat = CGFloat(60*i)
-                    let recordwidth:CGFloat = CGFloat(60*j)
-                    basicwall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
-                    basicwall.size=CGSizeMake(60, 60)
-                    self.addChild(basicwall)
+                    map.map1[i*26+j].Wall = SKSpriteNode(texture:BasicWallTexture)
+                    let recordheight:CGFloat = CGFloat(30*i)
+                    let recordwidth:CGFloat = CGFloat(30*j)
+                    map.map1[i*26+j].Wall.position = CGPointMake((size.width/4+recordwidth+15),(recordheight+15))
+                    map.map1[i*26+j].Wall.size=CGSizeMake(30, 30)
+                    self.addChild(map.map1[i*26+j].Wall)
                 }
-                else if(map.map[i][j] == 2)
+                else if(map.map1[i*26+j].state == 2)
                 {
-                    let slabwall = SKSpriteNode(texture:SlabWallTexture)
-                    let recordheight:CGFloat = CGFloat(60*i)
-                    let recordwidth:CGFloat = CGFloat(60*j)
-                    slabwall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
-                    slabwall.size=CGSizeMake(60, 60)
-                    self.addChild(slabwall)
-
+                    map.map1[i*26+j].Wall = SKSpriteNode(texture:SlabWallTexture)
+                    let recordheight:CGFloat = CGFloat(30*i)
+                    let recordwidth:CGFloat = CGFloat(30*j)
+                    map.map1[i*26+j].Wall.position = CGPointMake((size.width/4+recordwidth+15),(recordheight+15))
+                    map.map1[i*26+j].Wall.size=CGSizeMake(30, 30)
+                    self.addChild(map.map1[i*26+j].Wall)
                 }
-                else if(map.map[i][j] == 3)
+                else if(map.map1[i*26+j].state == 3)
                 {
-                    let riverwall = SKSpriteNode(texture:RiverWallTexture)
-                    let recordheight:CGFloat = CGFloat(60*i)
-                    let recordwidth:CGFloat = CGFloat(60*j)
-                    riverwall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
-                    riverwall.size=CGSizeMake(60, 60)
-                    self.addChild(riverwall)
+                    map.map1[i*26+j].Wall = SKSpriteNode(texture:RiverWallTexture)
+                    let recordheight:CGFloat = CGFloat(30*i)
+                    let recordwidth:CGFloat = CGFloat(30*j)
+                    map.map1[i*26+j].Wall.position = CGPointMake((size.width/4+recordwidth+15),(recordheight+15))
+                    map.map1[i*26+j].Wall.size=CGSizeMake(30, 30)
+                    self.addChild(map.map1[i*26+j].Wall)
                 }
-                else if(map.map[i][j]==4)
+                else if(map.map1[i*26+j].state==4)
                 {
-                    let grasswall = SKSpriteNode(texture:GrassWallTexture)
-                    let recordheight:CGFloat = CGFloat(60*i)
-                    let recordwidth:CGFloat = CGFloat(60*j)
-                    grasswall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
-                    grasswall.size=CGSizeMake(60, 60)
-                    self.addChild(grasswall)
+                    map.map1[i*26+j].Wall = SKSpriteNode(texture:GrassWallTexture)
+                    let recordheight:CGFloat = CGFloat(30*i)
+                    let recordwidth:CGFloat = CGFloat(30*j)
+                    map.map1[i*26+j].Wall.position = CGPointMake((size.width/4+recordwidth+15),(recordheight+15))
+                    map.map1[i*26+j].Wall.size=CGSizeMake(30, 30)
+                    self.addChild(map.map1[i*26+j].Wall)
                 }
-                else if(map.map[i][j] == 5)
+                else if(map.map1[i*26+j].state == 5)
                 {
-                    let boss = SKSpriteNode(texture:BossTexture)
-                    let recordheight:CGFloat = CGFloat(60*i)
-                    let recordwidth:CGFloat = CGFloat(60*j)
-                    boss.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
-                    boss.size=CGSizeMake(60, 60)
-                    self.addChild(boss)
+                    map.map1[i*26+j].Wall = SKSpriteNode(texture:BossTexture)
+                    let recordheight:CGFloat = CGFloat(30*i)
+                    let recordwidth:CGFloat = CGFloat(30*j)
+                    map.map1[i*26+j].Wall.position = CGPointMake((size.width/4+recordwidth+30),(recordheight+30))
+                    map.map1[i*26+j].Wall.size=CGSizeMake(60, 60)
+                    self.addChild(map.map1[i*26+j].Wall)
                 }
             }
         }

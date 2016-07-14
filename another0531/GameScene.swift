@@ -31,7 +31,7 @@ class GameScene: SKScene {
         self.addChild(myplayer1)
         
         myplayer2.name = "MyPlayer2"
-        myplayer2.text = "Player2"
+        myplayer2.text = "Hello!"
         myplayer2.fontName = "MarkerFelt-Thin"
         myplayer2.fontSize = 40
         myplayer2.fontColor = SKColor.orangeColor()

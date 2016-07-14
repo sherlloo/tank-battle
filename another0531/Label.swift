@@ -21,6 +21,7 @@ class Button {
     let leftLabel  = SKLabelNode(text: "Chalkduster")
     let rightLabel = SKLabelNode(text: "Chalkduster")
     let attackLabel = SKLabelNode(text: "Chalkduster")
+    let RestartLabel = SKLabelNode(text:"Chalkduster")
     
     let FightViewTexture = SKTexture(imageNamed: "divider")
     var FightViewl = SKSpriteNode()
@@ -59,6 +60,14 @@ class Button {
         attackLabel.fontSize = 120
         attackLabel.fontColor = SKColor.orangeColor()
         
+        RestartLabel.text = "Restart!"
+        RestartLabel.name = "restart"
+        RestartLabel.fontName = "MarkerFelt-Thin"
+        RestartLabel.fontColor = SKColor.orangeColor()
+       // RestartLabel.position = CGPointMake(self.size.width/2, self.size.height/2 + 60)
+      //  RestartLabel.setScale(3)
+
+        
         FightViewl = SKSpriteNode(texture: FightViewTexture)
         FightViewl.setScale(2)
         
@@ -79,10 +88,12 @@ class Button {
         
         attackLabel.position = CGPointMake((X - 20) * 6.5 + 120, Y - 90)
         
-        LeftBound = CGPointMake((X - 20)*2 - 80, Y)
+        RestartLabel.position = CGPointMake((X-20)*4, Y - 20)
+        
+        LeftBound = CGPointMake((X - 20)*2 - 30 , Y)
         FightViewl.position = CGPointMake((X - 20)*2, Y)
         
-        RightBound = CGPointMake((X - 20)*6.5 + 80, Y)
+        RightBound = CGPointMake((X - 20)*6.5 + 60, Y)
         FightViewr.position = CGPointMake((X - 20)*6.5+30, Y)
         
         

@@ -15,11 +15,11 @@ class NewGameSceneplayer2: SKScene {
         /*横屏*/
         UIDevice.currentDevice().setValue(UIInterfaceOrientation.LandscapeLeft.rawValue, forKey: "orientation")
         
-        backgroundColor = UIColor.yellowColor()
+        backgroundColor = UIColor.blueColor()
         let myLabel1 = SKLabelNode(fontNamed:"Chalkduster")
         myLabel1.text = "Hello, World!"
-        myLabel1.fontSize = 45
-        myLabel1.color = UIColor.blackColor()
+        myLabel1.fontSize = 80
+        myLabel1.color = UIColor.whiteColor()
         myLabel1.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
         
         self.addChild(myLabel1)

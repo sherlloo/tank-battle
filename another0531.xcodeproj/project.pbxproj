@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		18252C761CFD78D000391F41 /* player1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18252C751CFD78D000391F41 /* player1.swift */; };
 		18A180261D00744600F733F8 /* player2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A180251D00744600F733F8 /* player2.swift */; };
+		18A8C8291D35E3E200615499 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A8C8281D35E3E200615499 /* MapNode.swift */; };
+		18A8C82B1D35F15300615499 /* Tankenemies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A8C82A1D35F15300615499 /* Tankenemies.swift */; };
+		18A8C82D1D35F19600615499 /* TankSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A8C82C1D35F19600615499 /* TankSingle.swift */; };
 		18C48CCC1D059110007869B5 /* Bomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C48CCB1D059110007869B5 /* Bomb.swift */; };
 		18C48CCE1D0597C7007869B5 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C48CCD1D0597C7007869B5 /* List.swift */; };
 		18C48CD21D059B37007869B5 /* TankHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C48CD11D059B37007869B5 /* TankHero.swift */; };
@@ -26,6 +29,9 @@
 /* Begin PBXFileReference section */
 		18252C751CFD78D000391F41 /* player1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = player1.swift; sourceTree = "<group>"; };
 		18A180251D00744600F733F8 /* player2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = player2.swift; sourceTree = "<group>"; };
+		18A8C8281D35E3E200615499 /* MapNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapNode.swift; sourceTree = "<group>"; };
+		18A8C82A1D35F15300615499 /* Tankenemies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tankenemies.swift; sourceTree = "<group>"; };
+		18A8C82C1D35F19600615499 /* TankSingle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TankSingle.swift; sourceTree = "<group>"; };
 		18C48CCB1D059110007869B5 /* Bomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bomb.swift; sourceTree = "<group>"; };
 		18C48CCD1D0597C7007869B5 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		18C48CD11D059B37007869B5 /* TankHero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TankHero.swift; sourceTree = "<group>"; };
@@ -72,6 +78,7 @@
 		18FB078F1CFD654500E670AC /* another0531 */ = {
 			isa = PBXGroup;
 			children = (
+				18A8C8281D35E3E200615499 /* MapNode.swift */,
 				18FB07901CFD654500E670AC /* AppDelegate.swift */,
 				18FB07941CFD654500E670AC /* GameScene.swift */,
 				18FB07961CFD654500E670AC /* GameViewController.swift */,
@@ -87,6 +94,8 @@
 				18C48CD31D059B55007869B5 /* Label.swift */,
 				18C48CD51D05AE76007869B5 /* FightMap.swift */,
 				18C48CD71D05BD68007869B5 /* Obstacle.swift */,
+				18A8C82A1D35F15300615499 /* Tankenemies.swift */,
+				18A8C82C1D35F19600615499 /* TankSingle.swift */,
 			);
 			path = another0531;
 			sourceTree = "<group>";
@@ -162,6 +171,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18A8C8291D35E3E200615499 /* MapNode.swift in Sources */,
 				18FB07951CFD654500E670AC /* GameScene.swift in Sources */,
 				18C48CD81D05BD68007869B5 /* Obstacle.swift in Sources */,
 				18FB07971CFD654500E670AC /* GameViewController.swift in Sources */,
@@ -170,8 +180,10 @@
 				18252C761CFD78D000391F41 /* player1.swift in Sources */,
 				18C48CD61D05AE76007869B5 /* FightMap.swift in Sources */,
 				18C48CD41D059B55007869B5 /* Label.swift in Sources */,
+				18A8C82D1D35F19600615499 /* TankSingle.swift in Sources */,
 				18C48CD21D059B37007869B5 /* TankHero.swift in Sources */,
 				18FB07911CFD654500E670AC /* AppDelegate.swift in Sources */,
+				18A8C82B1D35F15300615499 /* Tankenemies.swift in Sources */,
 				18C48CCC1D059110007869B5 /* Bomb.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
